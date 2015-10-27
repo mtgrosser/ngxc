@@ -1,0 +1,10 @@
+define_macro :ssl_encryption do |host|
+  ssl_certificate      "/etc/ssl/private/#{host}.crt"
+  ssl_certificate_key  "/etc/ssl/private/#{host}.key"
+
+  ssl_session_cache   'shared:SSL:1m'
+  ssl_session_timeout '5m'
+
+  ssl_ciphers                 'HIGH:!aNULL:!MD5'
+  ssl_prefer_server_ciphers   :on
+end
