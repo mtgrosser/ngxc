@@ -1,40 +1,32 @@
 module Ngxc
-  SIMPLE = [:user, :worker_processes, :worker_connections, :include, :default_type,
-            :pid, :error_log, 
-            :server_name,
-            :ssl_certificate, :ssl_certificate_key,
-            :ssl_session_cache, :ssl_session_timeout, :ssl_ciphers, :ssl_prefer_server_ciphers]
-            
-  BLOCK = [:events, :http, :server]
-
-  raise 'Duplicate directive' unless (SIMPLE & BLOCK).empty?
-  
-  class << self
-    def directives
-      SIMPLE + BLOCK
-    end
-  end
-  
   class Configurable
-    def directives
-      @directives ||= []
-    end
-    
+
     class << self
-      def define_macro(name, &block)
-        name = name.to_sym
-        raise ArgumentError, "#{name} is not a valid macro name" if Ngxc.directives.include?(name)
+      def directive(*names)
+        names.each do |name|
+          define_method(name) do |*args, &block|
+            directives << Directive.new(name, *args, &block)
+          end
+        end
+      end
+
+      def define(name, &block)
         define_method(name) do |*args|
           raise ArgumentError, "Wrong number of arguments (#{args.size} for #{block.arity})" unless args.size == block.arity
           instance_exec(*args, &block)
         end
       end
     end
-    
-    (SIMPLE + BLOCK).each do |name|
-      define_method(name) do |*args, &block|
-        directives << Directive.new(name, *args, &block)
-      end
+
+    directive :user, :worker_processes, :worker_connections, :include, :default_type,
+              :pid, :error_log,
+              :server_name,
+              :ssl_certificate, :ssl_certificate_key,
+              :ssl_session_cache, :ssl_session_timeout, :ssl_ciphers, :ssl_prefer_server_ciphers,
+              :events, :http, :server    
+
+    def directives
+      @directives ||= []
     end
     
     private
@@ -48,18 +40,17 @@ module Ngxc
 
     def initialize(name, *args, &block)
       @name = name.to_sym
-      raise ArgumentError, "#{name} is not a block directive" if simple? && block_given?
-      raise ArgumentError, "#{name} is a block directive" if block? && !block_given?
+      @simple = !block_given?
       @args = args
       instance_exec(&block) if block_given?
     end
     
     def block?
-      BLOCK.include?(@name)
+      not simple?
     end
     
     def simple?
-      !block?
+      !!@simple
     end
     
     def to_conf(indent = 0)
@@ -89,8 +80,12 @@ module Ngxc
       end
     end
     
-    def define_macro(name, &block)
-      Configurable.define_macro(name, &block)
+    def directive(*names)
+      Configurable.directive(*names)
+    end
+
+    def define(name, &block)
+      Configurable.define(name, &block)
     end
     
     def to_conf(indent = 0)
