@@ -1,6 +1,8 @@
 module Ngxc
   SIMPLE = [:user, :worker_processes, :worker_connections, :include, :default_type,
-            :pid, :error_log, :ssl_certificate, :ssl_certificate_key,
+            :pid, :error_log, 
+            :server_name,
+            :ssl_certificate, :ssl_certificate_key,
             :ssl_session_cache, :ssl_session_timeout, :ssl_ciphers, :ssl_prefer_server_ciphers]
             
   BLOCK = [:events, :http, :server]
@@ -49,7 +51,7 @@ module Ngxc
       raise ArgumentError, "#{name} is not a block directive" if simple? && block_given?
       raise ArgumentError, "#{name} is a block directive" if block? && !block_given?
       @args = args
-      instance_eval(&block) if block_given?
+      instance_exec(&block) if block_given?
     end
     
     def block?
@@ -61,10 +63,12 @@ module Ngxc
     end
     
     def to_conf(indent = 0)
+      arglist = @args.map(&:to_s).join(' ')
+      arglist = " #{arglist}" if @args.size > 0
       if simple?
-        pad("#{@name} #{@args.map(&:to_s).join(' ')};\n", indent)
+        pad("#{@name}#{arglist};\n", indent)
       else
-        "\n#{pad(@name, indent)} {\n#{directives.map { |d| d.to_conf(indent + 4)}.join}#{pad('', indent)}}\n"
+        "\n#{pad(@name, indent)}#{arglist} {\n#{directives.map { |d| d.to_conf(indent + 4)}.join}#{pad('', indent)}}\n"
       end
     end
     
@@ -74,14 +78,14 @@ module Ngxc
 
     def initialize(file)
       @root_path = File.dirname(file)
-      instance_eval(File.read(file))
+      instance_eval(File.read(file), file)
     end
     
     def load(path)
       path = File.join(@root_path, path) unless path.start_with?('/')
       raise "Path not found: #{path}" unless File.directory?(File.dirname(path))
       Dir.glob(path).each do |file|
-        instance_eval File.read(file) #if File.file?(file)
+        instance_eval File.read(file), file #if File.file?(file)
       end
     end
     

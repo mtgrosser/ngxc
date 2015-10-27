@@ -1,4 +1,4 @@
-load 'macros/*.ngxconf'
+load 'macros/*.ngxc'
 
 user 'nginx'
 worker_processes 'auto'
@@ -14,7 +14,7 @@ http {
   include      '/etc/nginx/mime.types'
   default_type 'application/octet-stream'
     
-  server {
-    ssl_encryption 'example.com'
-  }
+  vserver 'example.com', '127.0.0.1'
+  
+  vserver 'wuppy.foo', '1.2.3.4:80'
 }

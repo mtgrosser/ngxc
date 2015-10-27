@@ -1,3 +1,10 @@
+define_macro :vserver do |host, ipaddr|
+  server ipaddr do
+    server_name host
+    ssl_encryption host
+  end
+end
+
 define_macro :ssl_encryption do |host|
   ssl_certificate      "/etc/ssl/private/#{host}.crt"
   ssl_certificate_key  "/etc/ssl/private/#{host}.key"
