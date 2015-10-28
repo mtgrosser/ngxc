@@ -1,4 +1,4 @@
-load 'includes/*.ngxc'
+include_dir 'includes'
 
 user 'nginx'
 worker_processes 'auto'
@@ -19,4 +19,7 @@ http {
   vserver 'example.com', '127.0.0.1'
   
   vserver 'wuppy.foo', '1.2.3.4:80'
+  
+  return! '404'
+  break!
 }
