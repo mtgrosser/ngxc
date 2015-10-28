@@ -18,14 +18,4 @@ MRuby::Build.new do |conf|
   conf.gem github: 'iij/mruby-pack'
   conf.gem github: 'ksss/mruby-file-stat'
   conf.gem github: 'gromnitsky/mruby-dir-glob'
-
-  # conf.gem 'examples/mrbgems/c_extension_example' do |g|
-  #   g.cc.flags << '-g' # append cflags in this gem
-  # end
-  # conf.gem 'examples/mrbgems/c_and_ruby_extension_example'
-  # conf.gem :github => 'masuidrive/mrbgems-example', :checksum_hash => '76518e8aecd131d047378448ac8055fa29d974a9'
-  # conf.gem :git => 'git@github.com:masuidrive/mrbgems-example.git', :branch => 'master', :options => '-v'
-
-  # include the default GEMs
-  #conf.gembox 'default'
 end

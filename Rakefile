@@ -29,7 +29,7 @@ task :default => :mruby do
   sh "#{PREFIX}/bin/mrbc -B ngxc -o build/ngxc.mrbc lib/ngxc.rb"
   sh "#{PREFIX}/bin/mrbc -B cli -o build/cli.mrbc lib/cli.rb"
   sh "gcc -Isrc -I#{PREFIX}/src -I#{PREFIX}/include -Ibuild -c src/main.c -o build/main.o"
-  sh "gcc -o build/ngxc build/main.o #{PREFIX}/build/host/lib/libmruby.a"
+  sh "gcc -o build/ngxc build/main.o #{PREFIX}/build/host/lib/libmruby.a -lm"
 end
 
 task :clean do
