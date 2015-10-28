@@ -17,6 +17,7 @@ task :mruby do
     STDOUT.puts "Your mruby is looking good\n\n"
   else
     STDOUT.puts "Looks like we need to build a customized mruby\n\n"
+    sh "mkdir -p build"
     sh "curl -L https://github.com/mruby/mruby/archive/#{MRUBY_VERSION}.tar.gz -o build/mruby.tar.gz"
     sh "tar -xzf build/mruby.tar.gz -C build"
     sh "cp build_config.rb build/mruby-#{MRUBY_VERSION}"
