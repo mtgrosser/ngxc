@@ -4,12 +4,12 @@
 
 ## Building
 
-In order to build ngxc, you need to build a customized version of mruby, which contains some additional mrbgems.
+In order to build ngxc, you need to build a customized version of mruby,
+which includes some extra mrbgems.
 
 ### mruby
 ```bash
-export MRUBY_CONFIG=$PWD/build_config.rb
-ruby-build mruby-1.1.0 ~/.rubies/mruby-1.1.0
+rake mruby
 ```
 
 ### ngxc
