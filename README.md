@@ -5,16 +5,10 @@
 ## Building
 
 In order to build ngxc, you need to build a customized version of mruby,
-which includes some extra mrbgems.
+which includes some extra mrbgems. The default rake task will take care
+of this.
 
-### mruby
-```bash
-rake mruby
-```
-
-### ngxc
-
-The ngxc binary can be built using the included Rakefile:
+To build the ngxc binary, type:
 
 ```bash
 rake
