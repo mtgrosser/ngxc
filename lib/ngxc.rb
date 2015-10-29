@@ -227,7 +227,6 @@ module Ngxc
 
     def initialize(file)
       self.class.root_path = File.dirname(file)
-      puts file
       instance_eval(File.read(file), file)
     rescue Errno::ENOENT => e
      raise e.message.sub('Errno::ENOENT: ', '')
