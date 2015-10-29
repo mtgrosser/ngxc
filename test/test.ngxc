@@ -11,14 +11,12 @@ events {
 }
 
 http {
-  include      '/etc/nginx/mime.types'
+  include!     '/etc/nginx/mime.types'
   default_type 'application/octet-stream'
 
   passenger_default_ruby 'ruppy-foo'  
 
-  vserver 'example.com', '127.0.0.1'
-  
-  vserver 'wuppy.foo', '1.2.3.4:80'
+  include_dir 'sites'
   
   return! '404'
   break!

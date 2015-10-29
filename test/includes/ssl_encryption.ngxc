@@ -1,7 +1,9 @@
-define :vserver do |host, ipaddr|
+define :vserver do |host, ipaddr, extras = nil|
   server ipaddr do
+    self << "# this is a comment regarding #{host}"
     server_name host
     ssl_encryption host
+    self << extras
   end
 end
 

@@ -1,11 +1,33 @@
 module Ngxc
   VERSION = '0.0.3'
   
+  class Text
+    def initialize(text)
+      @text = text
+    end
+    
+    def block?; false; end
+    def simple?; false; end
+    
+    def to_conf(indent = 0)
+      "#{' ' * indent}#{@text}\n"
+    end
+  end
+  
   class Configurable
+    @@root_path = ''
     @@directives = []
     @@aliases = {}
     
     class << self
+      def root_path
+        @@root_path
+      end
+      
+      def root_path=(path)
+        @@root_path = path
+      end
+      
       def directive(*names)
         @@directives.concat(names.map(&:to_sym)).uniq!
       end
@@ -28,11 +50,9 @@ module Ngxc
       end
       
       def define(name, &block)
-        define_method(name) do |*args|
-          raise ArgumentError, "Wrong number of arguments (#{args.size} for #{block.arity})" unless args.size == block.arity
-          instance_exec(*args, &block)
-        end
+        define_method(name) { |*args| instance_exec(*args, &block) }
       end
+      
     end
 
     directive :accept_mutex, :accept_mutex_delay, :access_log, :add_after_body, :add_before_body, :add_header,
@@ -60,7 +80,7 @@ module Ngxc
               :gzip_min_length, :gzip_proxied, :gzip_static, :gzip_types, :gzip_vary, :hash, :health_check,
               :health_check_timeout, :hls, :hls_buffers, :hls_forward_args, :hls_fragment, :hls_mp4_buffer_size,
               :hls_mp4_max_buffer_size, :http, :http2_chunk_size, :http2_idle_timeout, :http2_max_concurrent_streams,
-              :http2_recv_buffer_size, :http2_recv_timeout, :if, :if_modified_since, :ignore_invalid_headers, :image_filter,
+              :http2_recv_buffer_size, :http2_recv_timeout, :if_modified_since, :ignore_invalid_headers, :image_filter,
               :image_filter_buffer, :image_filter_interlace, :image_filter_jpeg_quality, :image_filter_sharpen,
               :image_filter_transparency, :imap_auth, :imap_capabilities, :imap_client_buffer, :include, :index, :internal,
               :ip_hash, :keepalive, :keepalive_disable, :keepalive_requests, :keepalive_timeout, :large_client_header_buffers,
@@ -126,7 +146,7 @@ module Ngxc
               :worker_cpu_affinity, :worker_priority, :worker_processes, :worker_rlimit_core, :worker_rlimit_nofile, :working_directory,
               :xclient, :xml_entities, :xslt_last_modified, :xslt_param, :xslt_string_param, :xslt_stylesheet, :xslt_types, :zone
 
-    alias_directive 'alias', 'break', 'return'
+    alias_directive 'alias', 'break', 'if', 'include', 'return'
     
     def directives
       @directives ||= []
@@ -140,6 +160,29 @@ module Ngxc
       end
     end
     
+    def include_dir(path)
+      path = File.join(self.class.root_path, path) unless path.start_with?('/')
+      raise "Path not found: #{path}" unless File.directory?(File.dirname(path))
+      Dir.entries(path).each do |file|
+        file = File.join(path, file)
+        instance_eval File.read(file), file if file.end_with?('.ngxc') && !File.directory?(file)
+      end
+    end
+    
+    def include(file)
+      file = File.join(self.class.root_path, file) unless file.start_with?('/')
+      instance_eval File.read(file), file
+    end
+    
+    def <<(obj)
+      case obj
+      when Proc
+        instance_eval(&obj)
+      when String
+        directives << Text.new(obj)
+      end
+    end
+        
     private
     
     def pad(string, indent)
@@ -174,7 +217,7 @@ module Ngxc
       if simple?
         pad("#{conf_name}#{arglist};\n", indent)
       else
-        "\n#{pad(conf_name, indent)}#{arglist} {\n#{directives.map { |d| d.to_conf(indent + 4)}.join}#{pad('', indent)}}\n"
+        "\n#{pad(conf_name, indent)}#{arglist} {#{"\n" unless directives.first.block?}#{directives.map { |d| d.to_conf(indent + 4)}.join}#{pad('', indent)}}\n"
       end
     end
     
@@ -183,10 +226,11 @@ module Ngxc
   class Configuration < Configurable
 
     def initialize(file)
-      @root_path = File.dirname(file)
+      self.class.root_path = File.dirname(file)
+      puts file
       instance_eval(File.read(file), file)
-    rescue Errno::ENOENT
-      raise "No such file or directory: #{file}"
+    rescue Errno::ENOENT => e
+     raise e.message.sub('Errno::ENOENT: ', '')
     end
 
     def directive(*names)
@@ -195,20 +239,6 @@ module Ngxc
 
     def define(name, &block)
       Configurable.define(name, &block)
-    end
-    
-    def include_dir(path)
-      path = File.join(@root_path, path) unless path.start_with?('/')
-      raise "Path not found: #{path}" unless File.directory?(File.dirname(path))
-      Dir.entries(path).each do |file|
-        file = File.join(path, file)
-        instance_eval File.read(file), file if file.end_with?('.ngxc') && !File.directory?(file)
-      end
-    end
-    
-    def include(file)
-      file = File.join(@root_path, file) unless file.start_with?('/')
-      instance_eval File.read(file), file
     end
     
     def to_conf(indent = 0)
