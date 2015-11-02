@@ -6,7 +6,7 @@ user 'nginx'
 worker_processes 'auto'
 
 error_log '/var/logs/nginx/error.log'
-pid	      '/run/nginx.pid'
+pid       '/run/nginx.pid'
 
 events {
   worker_connections 1024
@@ -16,7 +16,7 @@ http {
   include!     '/etc/nginx/mime.types'
   default_type 'application/octet-stream'
 
-  passenger_default_ruby 'ruppy-foo'  
+  passenger_default_ruby '/opt/bin/ruby'
 
   include_dir 'sites'
   
