@@ -259,7 +259,7 @@ module Ngxc
     end
     
     def to_conf(indent = 0)
-      directives.map(&:to_conf).join.strip
+      directives.map(&:to_conf).join.lstrip
     end
     
   end
