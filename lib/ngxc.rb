@@ -153,11 +153,8 @@ module Ngxc
     end
     
     def method_missing(name, *args, &block)
-      if self.class.directive?(name)
-        directives << Directive.new(name, *args, &block)
-      else
-        super
-      end
+      return super unless self.class.directive?(name)
+      directives << Directive.new(name, *args, &block)
     end
     
     def include_dir(path)
