@@ -37,7 +37,7 @@ desc 'Test the ngxc binary'
 task :test => :default do
   sh "mkdir -p test/tmp"
   sh 'build/ngxc test/test.ngxc test/tmp/actual.conf'
-  sh 'diff --ignore-matching-lines "\# Date:" test/expected.conf test/tmp/actual.conf'
+  sh 'diff --ignore-matching-lines "^# Date:" test/expected.conf test/tmp/actual.conf'
 end
 
 desc 'Cleanup build directory'
