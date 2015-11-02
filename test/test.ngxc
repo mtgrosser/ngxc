@@ -3,7 +3,7 @@ ngxc_info
 include_dir 'includes'
 
 user 'nginx'
-worker_processes 'auto'
+worker_processes :auto
 
 error_log '/var/logs/nginx/error.log'
 pid       '/run/nginx.pid'
