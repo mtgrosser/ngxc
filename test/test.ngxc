@@ -1,3 +1,5 @@
+ngxc_info
+
 include_dir 'includes'
 
 user 'nginx'
