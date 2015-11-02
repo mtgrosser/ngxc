@@ -1,5 +1,5 @@
 module Ngxc
-  VERSION = '0.0.3'
+  VERSION = '0.1.0'
   
   class Text
     def initialize(text)
