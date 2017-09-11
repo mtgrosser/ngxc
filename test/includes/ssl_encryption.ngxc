@@ -3,7 +3,9 @@ define :vserver do |host, ipaddr, extras = nil|
     self << "# this is a comment regarding #{host}"
     server_name host
     ssl_encryption host
+    location_blocklist 'blocklist.txt'
     self << extras
+    yield!
   end
 end
 

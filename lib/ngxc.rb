@@ -1,5 +1,5 @@
 module Ngxc
-  VERSION = '0.1.1'
+  VERSION = '0.2.0'
   
   class Text
     def initialize(text)
@@ -18,6 +18,7 @@ module Ngxc
     @@root_path = ''
     @@directives = []
     @@aliases = {}
+    @@block_stack = []
     
     class << self
       def root_path
@@ -49,8 +50,15 @@ module Ngxc
         @@directives.include?(name)
       end
       
-      def define(name, &block)
-        define_method(name) { |*args| instance_exec(*args, &block) }
+      def define(name, &defn)
+        define_method(name) do |*args, &block|
+          begin
+            @@block_stack.push block
+            instance_exec(*args, &defn)
+          ensure
+            @@block_stack.pop
+          end
+        end
       end
       
     end
@@ -169,6 +177,15 @@ module Ngxc
     def include(file)
       file = File.join(self.class.root_path, file) unless file.start_with?('/')
       instance_eval File.read(file), file
+    end
+    
+    def yield!(*args)
+      instance_exec(*args, &@@block_stack.last) if @@block_stack.last
+    end
+    
+    def each_line(file, &block)
+      file = File.join(self.class.root_path, file) unless file.start_with?('/')
+      File.read(file).split("\n").map { |l| l.strip }.reject { |l| l.size == 0 }.each(&block)
     end
     
     def <<(obj)

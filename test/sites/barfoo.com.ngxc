@@ -1,0 +1,7 @@
+vserver 'barfoo.com', '9.10.11.12', -> {
+  location '/block_argument' do
+    if! '($something)' do
+      return! 418
+    end
+  end
+}

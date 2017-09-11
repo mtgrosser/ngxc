@@ -1,0 +1,7 @@
+define :location_returns do |loc, status|
+  location(loc) { return! status }
+end
+
+define :location_blocklist do |textfile, status = 404|
+  each_line(textfile) { |loc| location_returns loc, status }
+end
