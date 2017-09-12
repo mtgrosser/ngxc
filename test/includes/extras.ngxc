@@ -3,5 +3,5 @@ define :location_returns do |loc, status|
 end
 
 define :location_blocklist do |textfile, status = 404|
-  each_line(textfile) { |loc| location_returns loc, status }
+  each_entry(textfile) { |loc| location_returns loc, status }
 end

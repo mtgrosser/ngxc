@@ -1,5 +1,5 @@
 module Ngxc
-  VERSION = '0.2.0'
+  VERSION = '0.2.1'
   
   class Text
     def initialize(text)
@@ -183,9 +183,13 @@ module Ngxc
       instance_exec(*args, &@@block_stack.last) if @@block_stack.last
     end
     
-    def each_line(file, &block)
+    def entries(file)
       file = File.join(self.class.root_path, file) unless file.start_with?('/')
-      File.read(file).split("\n").map { |l| l.strip }.reject { |l| l.size == 0 }.each(&block)
+      File.read(file).split("\n").map { |l| l.strip }.reject { |l| l.size == 0 }
+    end
+    
+    def each_entry(file, &block)
+      entries(file).each(&block)
     end
     
     def <<(obj)
