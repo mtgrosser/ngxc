@@ -1,5 +1,5 @@
 Name:    ngxc
-Version: 0.1.1
+Version: 0.2.0
 Release: 1%{?dist}
 Summary: Nginx configuration file compiler
 
@@ -28,5 +28,7 @@ install -m 0644 systemd/nginx.service.d/%{name}.conf %{buildroot}/usr/lib/system
 /usr/lib/systemd/system/nginx.service.d/%{name}.conf
 
 %changelog
+* Mon Sep 11 2017 Matthias Grosser <mtgrosser@gmx.net> - 0.2.0-1
+  - Updating to latest version
 * Mon Aug 28 2017 Matthias Grosser <mtgrosser@gmx.net> - 0.1.1-1
   - First rpm package
