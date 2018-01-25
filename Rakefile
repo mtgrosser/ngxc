@@ -1,4 +1,4 @@
-MRUBY_VERSION = '1.1.0'
+MRUBY_VERSION = '1.2.0'
 PREFIX = "build/mruby-#{MRUBY_VERSION}"
 
 desc 'Build mruby with required mrbgems'
