@@ -1,0 +1,21 @@
+# Maintainer: Matthias Grosser <mtgrosser at gmx dot net>
+pkgname=ngxc
+
+pkgver=0.2.1
+pkgrel=1
+pkgdesc='Nginx configuration file compiler'
+arch=('any')
+url='https://github.com/mtgrosser/ngxc'
+source=("https://github.com/mtgrosser/$pkgname/archive/v$pkgver.tar.gz")
+license=(MIT)
+md5sums=('6ac8436f524b6011ad2af3e2db7aa62d')
+
+build() {
+  cd "$pkgname-$pkgver"
+  rake
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  install -Dm755 bin/$pkgname "$pkgdir/usr/bin/$pkgname"
+}
