@@ -17,5 +17,5 @@ build() {
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  install -Dm755 bin/$pkgname "$pkgdir/usr/bin/$pkgname"
+  install -Dm755 build/$pkgname "$pkgdir/usr/bin/$pkgname"
 }
