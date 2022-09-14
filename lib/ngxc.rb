@@ -1,5 +1,5 @@
 module Ngxc
-  VERSION = '0.3.0'
+  VERSION = '0.4.0'
   
   class Text
     def initialize(text)
@@ -192,10 +192,14 @@ module Ngxc
       entries(file).each(&block)
     end
     
+    def each_entry_with_flags(file, &block)
+      entries(file).map { |entry| entry.split(' [') }
+    end
+    
     def <<(obj)
       case obj
       when Proc
-        instance_eval(&obj)
+        instance_exec(&obj)
       when String
         directives << Text.new(obj)
       end
@@ -249,6 +253,8 @@ module Ngxc
       instance_eval(File.read(file), file)
     rescue Errno::ENOENT => e
       raise e.message.sub('Errno::ENOENT: ', '')
+    rescue => e
+      raise "#{e.message}\n\tfrom #{e.backtrace.join("\n\t")}"
     end
 
     def directive(*names)

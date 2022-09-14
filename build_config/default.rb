@@ -13,7 +13,7 @@ MRuby::Build.new do |conf|
   conf.gem core: 'mruby-time'
   conf.gem core: 'mruby-fiber'
   conf.gem core: 'mruby-enumerator'
-  conf.gem github: 'iij/mruby-io'
+  conf.gem core: 'mruby-io'
   conf.gem github: 'iij/mruby-errno'
   conf.gem github: 'iij/mruby-dir'
 end

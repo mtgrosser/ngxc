@@ -1,4 +1,4 @@
-MRUBY_VERSION = '1.2.0'
+MRUBY_VERSION = '3.1.0'
 PREFIX = "build/mruby-#{MRUBY_VERSION}"
 
 desc 'Build mruby with required mrbgems'
@@ -20,7 +20,7 @@ task :mruby do
     sh "mkdir -p build"
     sh "curl -L https://github.com/mruby/mruby/archive/#{MRUBY_VERSION}.tar.gz -o build/mruby.tar.gz"
     sh "tar -xzf build/mruby.tar.gz -C build"
-    sh "cp config/build_config.rb build/mruby-#{MRUBY_VERSION}"
+    sh "cp build_config/default.rb build/mruby-#{MRUBY_VERSION}/build_config"
     sh "cd build/mruby-#{MRUBY_VERSION} && ./minirake"
   end
 end
