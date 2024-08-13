@@ -4,6 +4,9 @@
 
 Write your nginx configurations in Ruby - no Ruby required!
 
+With ngxc, you can define dynamic nginx configuration macros as Ruby methods.
+Verbose and repetitious configuration blocks can be condensed into a single line of code.
+
 ## Building
 
 In order to build ngxc, you need to build a customized version of mruby,
