@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/mtgrosser/ngxc.svg?branch=master)](https://travis-ci.org/mtgrosser/ngxc)
 
-# ngxc - Nginx configuration file compiler
+# ngxc - Nginx configuration compiler
 
 Write your nginx configurations in Ruby - no Ruby required!
 
