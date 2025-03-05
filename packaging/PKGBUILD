@@ -1,7 +1,7 @@
 # Maintainer: Matthias Grosser <mtgrosser at gmx dot net>
 pkgname=ngxc
 
-pkgver=0.3.0
+pkgver=0.5.0
 pkgrel=1
 pkgdesc='Nginx configuration file compiler'
 arch=('any')
