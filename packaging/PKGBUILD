@@ -1,14 +1,14 @@
 # Maintainer: Matthias Grosser <mtgrosser at gmx dot net>
 pkgname=ngxc
 
-pkgver=0.5.0
+pkgver=0.5.1
 pkgrel=1
 pkgdesc='Nginx configuration file compiler'
 arch=('any')
 url='https://github.com/mtgrosser/ngxc'
 source=("https://github.com/mtgrosser/$pkgname/archive/v$pkgver.tar.gz")
 license=(MIT)
-md5sums=('4b6c2524a4544e187f0259f7085d3537')
+md5sums=('872f41d4f2a4cb99ff33ce045692f0e3')
 
 build() {
   cd "$pkgname-$pkgver"
