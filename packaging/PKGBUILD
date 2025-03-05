@@ -8,7 +8,7 @@ arch=('any')
 url='https://github.com/mtgrosser/ngxc'
 source=("https://github.com/mtgrosser/$pkgname/archive/v$pkgver.tar.gz")
 license=(MIT)
-md5sums=('e5eb0100c18288cc04dfaf48079abe3a')
+md5sums=('4b6c2524a4544e187f0259f7085d3537')
 
 build() {
   cd "$pkgname-$pkgver"
